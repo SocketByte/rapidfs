@@ -1,18 +1,22 @@
 package io.rapidfs.core.command.executables
 
+import io.rapidfs.core.RapidFS
 import io.rapidfs.core.command.Command
 import io.rapidfs.core.command.CommandBuilder
 import io.rapidfs.core.command.ExecutableCommand
-import io.rapidfs.core.command.exceptions.ArgumentRequiredException
 
-object TestCommand : ExecutableCommand() {
+object DropCommand : ExecutableCommand() {
     override fun execute(command: Command) {
-        println(command.getArgument("-key")?.content ?: throw ArgumentRequiredException("-key"))
+        val dbArgument = command.getArgument("-db")
+
+        val db = dbArgument?.content
+
+        RapidFS.databaseFactory.removeDatabase(db!!)
     }
 
     override fun getBuilder(): CommandBuilder {
-        return CommandBuilder("test")
-                .addArgument("-key")
+        return CommandBuilder("drop")
+                .addArgument("-db")
                 .setExecutable(this)
     }
 }

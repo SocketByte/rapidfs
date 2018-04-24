@@ -53,7 +53,8 @@ public class CommandHandler {
 
                         stringBuilder.append(" ").append(t);
                     }
-                    String content = stringBuilder.toString().replace(alias, "");
+                    String content = stringBuilder.toString().replace(alias, "")
+                            .replaceFirst(" ", "");
 
                     argument.setContent(content.replaceFirst(" ", ""));
                 }

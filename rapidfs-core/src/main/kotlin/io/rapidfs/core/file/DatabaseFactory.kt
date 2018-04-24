@@ -57,6 +57,7 @@ open class DatabaseFactory {
 
 
                         database.dynamicMap[split[0]] = result
+                        database.writtenKeys.add(split[0])
                         debug("Read: ${split[0]}")
                     }
 

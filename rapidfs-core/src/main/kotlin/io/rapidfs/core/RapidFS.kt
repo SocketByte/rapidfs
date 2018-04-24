@@ -16,7 +16,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader
 import io.rapidfs.core.command.Locker
 import io.rapidfs.core.command.exceptions.ArgumentRequiredException
 import io.rapidfs.core.command.exceptions.CommandNotFoundException
-import io.rapidfs.core.command.executables.TestCommand
+import io.rapidfs.core.command.executables.*
 import io.rapidfs.core.file.DatabaseFactory
 import io.rapidfs.core.listener.CommandListener
 import io.rapidfs.core.listener.SecurityListener
@@ -112,26 +112,12 @@ object RapidFS {
         println()
 
         databaseFactory.load()
-        if (databaseFactory.exist("test")) {
-            val database = databaseFactory.getDatabase("test")
 
-            info("test  -> ${database.get("test")}")
-            info("test2 -> ${database.get("test2")}")
-
-            val command = database.get("object") as RapidPacketCommand
-            info("object -> password: ${command.command}")
-        }
-        else {
-            val database = databaseFactory.createDatabase("test")
-
-            database.set("test", "something")
-            database.set("test2", 54)
-
-            val command = RapidPacketCommand("test password")
-            database.set("object", command)
-        }
-
-        CommandDatabase.addCommand(TestCommand)
+        CommandDatabase.addCommand(DropCommand)
+        CommandDatabase.addCommand(GetCommand)
+        CommandDatabase.addCommand(RemoveCommand)
+        CommandDatabase.addCommand(SetCommand)
+        CommandDatabase.addCommand(CreateCommand)
 
         while (true) {
             if (!Locker.isLocked()) {

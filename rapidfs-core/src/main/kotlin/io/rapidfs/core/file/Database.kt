@@ -15,11 +15,13 @@ open class Database(val file: File,
                private val buffer: Int = 8192) {
 
     val dynamicMap = mutableMapOf<String, Any?>()
-    private val writtenKeys = mutableListOf<String>()
+    val writtenKeys = mutableListOf<String>()
 
-    private fun update() {
+    private fun update(remove: Boolean = false) {
+        if (remove)
+            file.writeText("", StandardCharsets.UTF_8)
         for ((key, value) in dynamicMap) {
-            if (writtenKeys.contains(key))
+            if (!remove && writtenKeys.contains(key))
                 continue
 
             val result =
@@ -30,7 +32,8 @@ open class Database(val file: File,
             val toWrite = "$key:$result\n"
             file.appendText(toWrite, StandardCharsets.UTF_8)
 
-            writtenKeys.add(key)
+            if (!remove)
+                writtenKeys.add(key)
 
             debug("Database #$id", "Write: ${toWrite.replace("\n", "")}")
         }
@@ -49,7 +52,7 @@ open class Database(val file: File,
 
     fun remove(key: String): Boolean {
         this.dynamicMap.remove(key)
-        update()
+        update(true)
 
         debug("Database #$id", "Removed '$key'")
 
