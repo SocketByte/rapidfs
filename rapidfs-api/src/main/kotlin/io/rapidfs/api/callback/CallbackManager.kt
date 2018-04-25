@@ -12,7 +12,6 @@ class CallbackManager {
     fun complete(packet: RapidPacketCallback) {
         if (!callbacks.containsKey(packet.callbackId))
             return
-
         callbacks[packet.callbackId]
                 ?.completableFuture
                 ?.complete(packet)

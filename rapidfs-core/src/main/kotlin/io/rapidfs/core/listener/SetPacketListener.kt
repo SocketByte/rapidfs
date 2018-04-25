@@ -24,7 +24,7 @@ object SetPacketListener : Listener() {
 
         if (database == null) {
             val callback = RapidPacketCallback(RapidResult.ERROR, "database with name $db is null")
-
+            callback.callbackId = packet.callbackId
             connection.sendTCP(callback)
             return
         }
@@ -32,6 +32,7 @@ object SetPacketListener : Listener() {
         database.set(key, value)
 
         val callback = RapidPacketCallback(RapidResult.SUCCESS)
+        callback.callbackId = packet.callbackId
         connection.sendTCP(callback)
     }
 }

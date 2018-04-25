@@ -15,7 +15,7 @@ object RemoveCommand : ExecutableCommand() {
 
         val database = RapidFS.databaseFactory.getDatabase(db!!)
 
-        database.remove(key!!)
+        database?.remove(key!!)
     }
 
     override fun getBuilder(): CommandBuilder {

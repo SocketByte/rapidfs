@@ -5,7 +5,7 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 abstract class RapidPacket : Serializable {
-    val callbackId = ThreadLocalRandom
+    var callbackId = ThreadLocalRandom
             .current()
             .nextLong(Long.MIN_VALUE, Long.MAX_VALUE)
 }

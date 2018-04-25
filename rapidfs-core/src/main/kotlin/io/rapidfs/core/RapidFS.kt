@@ -16,14 +16,13 @@ import io.rapidfs.core.command.executables.*
 import io.rapidfs.core.file.DatabaseFactory
 import io.rapidfs.core.listener.*
 import io.rapidfs.core.security.SecurityListener
-import io.rapidfs.shared.RapidPacket
-import io.rapidfs.shared.RapidPacketAuth
-import io.rapidfs.shared.RapidPacketCommand
 import io.rapidfs.core.security.SecurityAdapter
 import io.rapidfs.core.security.SecurityProvider
+import io.rapidfs.shared.*
 import java.util.*
 import java.io.InputStreamReader
 import java.io.File
+import kotlin.collections.ArrayList
 
 
 object RapidFS {
@@ -87,9 +86,17 @@ object RapidFS {
         debug("Bind port: $port")
 
         val kryo = server.kryo
+        kryo.register(ArrayList::class.java)
         kryo.register(RapidPacket::class.java)
+        kryo.register(RapidResult::class.java)
         kryo.register(RapidPacketAuth::class.java)
         kryo.register(RapidPacketCommand::class.java)
+        kryo.register(RapidPacketSet::class.java)
+        kryo.register(RapidPacketGet::class.java)
+        kryo.register(RapidPacketDrop::class.java)
+        kryo.register(RapidPacketCreate::class.java)
+        kryo.register(RapidPacketRemove::class.java)
+        kryo.register(RapidPacketCallback::class.java)
         info("Registered all packet classes")
 
         securityProvider = SecurityProvider()

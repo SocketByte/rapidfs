@@ -11,9 +11,26 @@ class RapidClient(private val address: String,
 
     lateinit var client: Client
 
-    fun connect(timeout: Int = 4000) {
+    fun connect(timeout: Int = 4000): RapidClient {
         this.client = Client()
+        this.client.start()
         this.client.connect(timeout, address, port)
+
+        val kryo = client.kryo
+        kryo.register(ArrayList::class.java)
+        kryo.register(RapidPacket::class.java)
+        kryo.register(RapidResult::class.java)
+        kryo.register(RapidPacketAuth::class.java)
+        kryo.register(RapidPacketCommand::class.java)
+        kryo.register(RapidPacketSet::class.java)
+        kryo.register(RapidPacketGet::class.java)
+        kryo.register(RapidPacketDrop::class.java)
+        kryo.register(RapidPacketCreate::class.java)
+        kryo.register(RapidPacketRemove::class.java)
+        kryo.register(RapidPacketCallback::class.java)
+
+        this.client.addListener(ClientAdapter)
+        return this
     }
 
     fun disconnect() {
@@ -25,16 +42,14 @@ class RapidClient(private val address: String,
     }
 
     fun get(database: String, key: String, callback: Callback) {
-        val get = RapidPacketGet(key, database)
+        val get = RapidPacketGet(database, key)
         CallbackHandler.make(this, get, callback)
-                .sendAndPush()
     }
 
     fun getOrThrow(database: String, key: String): Any {
-        val get = RapidPacketGet(key, database)
+        val get = RapidPacketGet(database, key)
         val handler = CallbackHandler.make(this, get)
 
-        handler.sendAndPush()
         val packet = handler.get()
                 ?: throw NullPointerException("callback can not be null")
 
@@ -50,7 +65,6 @@ class RapidClient(private val address: String,
     fun setWithCallback(database: String, key: String, value: Any, callback: Callback) {
         val set = RapidPacketSet(database, key, value)
         CallbackHandler.make(this, set, callback)
-                .sendAndPush()
     }
 
     fun set(database: String, key: String, value: Any) {
@@ -62,7 +76,6 @@ class RapidClient(private val address: String,
         val set = RapidPacketSet(database, key, value)
         val handler = CallbackHandler.make(this, set)
 
-        handler.sendAndPush()
         val packet = handler.get()
             ?: throw NullPointerException("callback can not be null")
 
@@ -73,7 +86,6 @@ class RapidClient(private val address: String,
     fun createWithCallback(database: String, callback: Callback) {
         val create = RapidPacketCreate(database)
         CallbackHandler.make(this, create, callback)
-                .sendAndPush()
     }
 
     fun create(database: String) {
@@ -85,7 +97,6 @@ class RapidClient(private val address: String,
         val create = RapidPacketCreate(database)
         val handler = CallbackHandler.make(this, create)
 
-        handler.sendAndPush()
         val packet = handler.get()
                 ?: throw NullPointerException("callback can not be null")
 
@@ -96,7 +107,6 @@ class RapidClient(private val address: String,
     fun dropWithCallback(database: String, callback: Callback) {
         val drop = RapidPacketDrop(database)
         CallbackHandler.make(this, drop, callback)
-                .sendAndPush()
     }
 
     fun drop(database: String) {
@@ -108,7 +118,6 @@ class RapidClient(private val address: String,
         val drop = RapidPacketDrop(database)
         val handler = CallbackHandler.make(this, drop)
 
-        handler.sendAndPush()
         val packet = handler.get()
                 ?: throw NullPointerException("callback can not be null")
 
@@ -119,7 +128,6 @@ class RapidClient(private val address: String,
     fun removeWithCallback(database: String, key: String, callback: Callback) {
         val remove = RapidPacketRemove(database, key)
         CallbackHandler.make(this, remove, callback)
-                .sendAndPush()
     }
 
     fun remove(database: String, key: String) {
@@ -131,7 +139,6 @@ class RapidClient(private val address: String,
         val remove = RapidPacketRemove(database, key)
         val handler = CallbackHandler.make(this, remove)
 
-        handler.sendAndPush()
         val packet = handler.get()
                 ?: throw NullPointerException("callback can not be null")
 

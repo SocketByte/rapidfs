@@ -17,7 +17,7 @@ class CallbackHandler private constructor(private val connection: RapidClient) :
     var callbackAction: Callback? = null
     var callbackId: Long = 0
 
-    fun sendAndPush() {
+    private fun sendAndPush() {
         connection.client.sendTCP(packet)
 
         ClientAdapter
@@ -60,6 +60,8 @@ class CallbackHandler private constructor(private val connection: RapidClient) :
             callbackHandler.callbackAction = null
             callbackHandler.callbackId = packet.callbackId
             callbackHandler.packet = packet
+
+            executorService.submit(callbackHandler)
             return callbackHandler
         }
     }

@@ -23,7 +23,7 @@ object RemovePacketListener : Listener() {
 
         if (database == null) {
             val callback = RapidPacketCallback(RapidResult.ERROR, "database with name $db is null")
-
+            callback.callbackId = packet.callbackId
             connection.sendTCP(callback)
             return
         }
@@ -31,7 +31,7 @@ object RemovePacketListener : Listener() {
         val result = database.get(key)
         if (result == null) {
             val callback = RapidPacketCallback(RapidResult.ERROR, "key with name $key is null")
-
+            callback.callbackId = packet.callbackId
             connection.sendTCP(callback)
             return
         }
@@ -39,6 +39,7 @@ object RemovePacketListener : Listener() {
         database.remove(key)
 
         val callback = RapidPacketCallback(RapidResult.SUCCESS)
+        callback.callbackId = packet.callbackId
         connection.sendTCP(callback)
     }
 }

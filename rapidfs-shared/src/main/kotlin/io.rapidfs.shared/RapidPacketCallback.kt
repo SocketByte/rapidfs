@@ -4,7 +4,7 @@ import io.rapidfs.shared.RapidPacket
 import io.rapidfs.shared.RapidResult
 
 data class RapidPacketCallback (
-        var result: RapidResult,
+        var result: RapidResult = RapidResult.SUCCESS,
         var message: String = "no message provided",
         val data: MutableList<Any> = mutableListOf())
     : RapidPacket()

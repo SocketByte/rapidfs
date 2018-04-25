@@ -18,11 +18,13 @@ object DropPacketListener : Listener() {
         val result = RapidFS.databaseFactory.removeDatabase(db)
         if (!result) {
             val callback = RapidPacketCallback(RapidResult.ERROR, "database with name $db does not exist")
+            callback.callbackId = packet.callbackId
             connection.sendTCP(callback)
             return
         }
 
         val callback = RapidPacketCallback(RapidResult.SUCCESS)
+        callback.callbackId = packet.callbackId
         connection.sendTCP(callback)
     }
 }

@@ -18,7 +18,7 @@ object SetCommand : ExecutableCommand() {
 
         val database = RapidFS.databaseFactory.getDatabase(db!!)
 
-        database.set(key!!, value)
+        database?.set(key!!, value)
     }
 
     override fun getBuilder(): CommandBuilder {

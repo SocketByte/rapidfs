@@ -16,7 +16,7 @@ object GetCommand : ExecutableCommand() {
 
         val database = RapidFS.databaseFactory.getDatabase(db!!)
 
-        info("Result from database ${database.name} and key $key: \n${database.get(key!!).toString()}")
+        info("Result from database ${database?.name} and key $key: \n${database?.get(key!!).toString()}")
     }
 
     override fun getBuilder(): CommandBuilder {
