@@ -5,6 +5,8 @@ import com.esotericsoftware.kryonet.Listener
 import com.esotericsoftware.minlog.Log.warn
 import io.rapidfs.core.RapidFS
 import io.rapidfs.core.security.SecurityProvider
+import io.rapidfs.shared.RapidPacketCallback
+import io.rapidfs.shared.RapidResult
 
 object SecurityAdapter : Listener() {
     override fun received(connection: Connection?, packet: Any?) {
@@ -12,8 +14,8 @@ object SecurityAdapter : Listener() {
             return
 
         if (RapidFS.securityProvider.notAuthorized(packet, connection)) {
+            connection.sendTCP(RapidPacketCallback(RapidResult.ERROR, "Insufficient permission"))
             connection.close()
-            warn("Connection #${connection.id} was not authorized. Closing the connection...")
         }
     }
 }

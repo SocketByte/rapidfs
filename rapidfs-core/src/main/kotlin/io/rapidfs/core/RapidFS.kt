@@ -14,9 +14,7 @@ import io.rapidfs.core.command.exceptions.ArgumentRequiredException
 import io.rapidfs.core.command.exceptions.CommandNotFoundException
 import io.rapidfs.core.command.executables.*
 import io.rapidfs.core.file.DatabaseFactory
-import io.rapidfs.core.listener.CommandListener
-import io.rapidfs.core.listener.GetPacketListener
-import io.rapidfs.core.listener.SetPacketListener
+import io.rapidfs.core.listener.*
 import io.rapidfs.core.security.SecurityListener
 import io.rapidfs.shared.RapidPacket
 import io.rapidfs.shared.RapidPacketAuth
@@ -107,6 +105,12 @@ object RapidFS {
         debug("Registered GetPacketListener")
         server.addListener(SetPacketListener)
         debug("Registered SetPacketListener")
+        server.addListener(RemovePacketListener)
+        debug("Registered RemovePacketListener")
+        server.addListener(CreatePacketListener)
+        debug("Registered CreatePacketListener")
+        server.addListener(DropPacketListener)
+        debug("Registered DropPacketListener")
         info("Registered all listeners")
 
         databaseFactory = DatabaseFactory()

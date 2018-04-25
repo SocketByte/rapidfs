@@ -85,22 +85,25 @@ open class DatabaseFactory {
         return database
     }
 
-    fun removeDatabase(name: String) {
-        val database = getDatabase(name)
-
+    fun removeDatabase(name: String): Boolean {
+        getDatabase(name) ?: return false
         databaseInfo.remove(name)
-
-        if (!database.file.delete())
-            throw IOException("database $name was not deleted successfully")
+        return true
     }
 
     fun exist(name: String): Boolean {
         return databaseInfo.containsKey(name)
     }
 
-    fun getDatabase(name: String): Database {
+    fun getDatabaseOrThrow(name: String): Database {
         return databaseInfo[name]
                 ?: throw NullPointerException("database with name $name does not exist")
+    }
+
+    fun getDatabase(name: String): Database? {
+        return if (databaseInfo.containsKey(name))
+            databaseInfo[name]
+        else null
     }
 
 }
