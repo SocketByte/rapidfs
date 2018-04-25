@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="rapidfs-api" />
         <module name="rapidfs-core" />
+        <module name="rapidfs-shared" />
       </profile>
     </annotationProcessing>
   </component>

@@ -3,10 +3,8 @@
   <component name="AutoImportedSourceRoots">
     <option name="directories">
       <list>
-        <option value="C:\Users\SocketByte\IdeaProjects\rapidfs/src/main/kotlin" />
         <option value="C:\Users\SocketByte\IdeaProjects\rapidfs/src/test/java" />
         <option value="C:\Users\SocketByte\IdeaProjects\rapidfs/src/test/kotlin" />
-        <option value="src/main/kotlin" />
       </list>
     </option>
   </component>

@@ -1,15 +1,11 @@
 package io.rapidfs.core
 
-import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryonet.Server
-import com.esotericsoftware.minlog.Log
 import com.esotericsoftware.minlog.Log.*
 import io.rapidfs.core.command.CommandDatabase
 import io.rapidfs.core.command.CommandHandler
 import io.rapidfs.core.file.properties.ConfigResolver
 import io.rapidfs.core.security.StackTraceHandler
-import io.rapidfs.core.security.cryptography.Alghoritm
-import io.rapidfs.core.security.cryptography.encrypt
 import java.io.FileReader
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader
@@ -19,16 +15,17 @@ import io.rapidfs.core.command.exceptions.CommandNotFoundException
 import io.rapidfs.core.command.executables.*
 import io.rapidfs.core.file.DatabaseFactory
 import io.rapidfs.core.listener.CommandListener
-import io.rapidfs.core.listener.SecurityListener
-import io.rapidfs.core.packet.RapidPacket
-import io.rapidfs.core.packet.RapidPacketAuth
-import io.rapidfs.core.packet.RapidPacketCommand
+import io.rapidfs.core.listener.GetPacketListener
+import io.rapidfs.core.listener.SetPacketListener
+import io.rapidfs.core.security.SecurityListener
+import io.rapidfs.shared.RapidPacket
+import io.rapidfs.shared.RapidPacketAuth
+import io.rapidfs.shared.RapidPacketCommand
+import io.rapidfs.core.security.SecurityAdapter
 import io.rapidfs.core.security.SecurityProvider
 import java.util.*
 import java.io.InputStreamReader
 import java.io.File
-
-
 
 
 object RapidFS {
@@ -101,8 +98,15 @@ object RapidFS {
         info("Created security provider")
 
         server.addListener(SecurityListener)
-        server.addListener(CommandListener)
         debug("Registered SecurityListener")
+        server.addListener(SecurityAdapter)
+        debug("Registered SecurityAdapter")
+        server.addListener(CommandListener)
+        debug("Registered CommandListener")
+        server.addListener(GetPacketListener)
+        debug("Registered GetPacketListener")
+        server.addListener(SetPacketListener)
+        debug("Registered SetPacketListener")
         info("Registered all listeners")
 
         databaseFactory = DatabaseFactory()

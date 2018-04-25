@@ -1,6 +1,7 @@
 package io.rapidfs.core.security
 
 import com.esotericsoftware.kryonet.Connection
+import io.rapidfs.shared.RapidPacketAuth
 
 class SecurityProvider {
     private val authorizedClients = mutableListOf<Connection>()
@@ -11,6 +12,7 @@ class SecurityProvider {
     fun deauthorize(connection: Connection) =
             this.authorizedClients.remove(connection)
 
-    fun isAuthorized(connection: Connection): Boolean =
-            this.authorizedClients.contains(connection)
+    fun notAuthorized(packet: Any, connection: Connection): Boolean {
+        return !this.authorizedClients.contains(connection) && packet !is RapidPacketAuth
+    }
 }

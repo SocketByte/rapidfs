@@ -3,8 +3,18 @@
   <parent>
     <artifactId>rapidfs</artifactId>
     <groupId>io.rapidfs</groupId>
-    <version>1.0</version>
+    <version>1.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>rapidfs-api</artifactId>
+  <distributionManagement>
+    <repository>
+      <id>nexus-releases</id>
+      <url>http://176.31.8.233:8081/repository/nexus-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <url>http://176.31.8.233:8081/repository/nexus-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
