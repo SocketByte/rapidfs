@@ -18,8 +18,6 @@ object CreatePacketListener : Listener() {
 
         val db = packet.database
 
-        println("Received packet: create $db")
-
         RapidFS.databaseFactory.createDatabase(db)
 
         val callback = RapidPacketCallback(RapidResult.SUCCESS)

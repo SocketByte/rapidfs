@@ -133,6 +133,7 @@ object RapidFS {
         CommandDatabase.addCommand(RemoveCommand)
         CommandDatabase.addCommand(SetCommand)
         CommandDatabase.addCommand(CreateCommand)
+        CommandDatabase.addCommand(UpdateCommand)
 
         while (true) {
             if (!Locker.isLocked()) {

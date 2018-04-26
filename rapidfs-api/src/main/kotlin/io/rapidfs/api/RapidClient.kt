@@ -41,6 +41,11 @@ class RapidClient(private val address: String,
         this.client.reconnect()
     }
 
+    fun send(command: String) {
+        val packet = RapidPacketCommand(command)
+        client.sendTCP(packet)
+    }
+
     fun get(database: String, key: String, callback: Callback) {
         val get = RapidPacketGet(database, key)
         CallbackHandler.make(this, get, callback)

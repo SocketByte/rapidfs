@@ -2,23 +2,38 @@ package io.rapidfs.example
 
 import io.rapidfs.api.RapidClient
 import io.rapidfs.shared.RapidPacketDrop
+import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
     val client = RapidClient("127.0.0.1", 8190)
             .connect()
 
-    client.createOrThrow("test")
-    println("After create")
+    var start = System.currentTimeMillis()
 
-    val testPacket = RapidPacketDrop("test")
+    for (x in 0..100) {
+        client.createOrThrow("test$x")
 
-    client.setOrThrow("test", "key", "value")
-    client.setOrThrow("test", "key2", testPacket)
-    println("After set")
+        for (i in 0..100) {
+            client.set("test$x", "key$i", "${i*2}_test")
+        }
+    }
 
-    println(client.getOrThrow("test", "key"))
-    println("After get")
+    var end = System.currentTimeMillis()
+    var time = end - start
 
-    val packet = client.getOrThrow("test", "key2") as RapidPacketDrop
-    println("Result: ${packet.database}")
+    println("Adding to DB: ${TimeUnit.MILLISECONDS.toSeconds(time)}s")
+
+    start = System.currentTimeMillis()
+
+    for (x in 0..100) {
+        for (i in 0..100) {
+            client.send("remove -db test$x -k key$i -nu")
+        }
+        client.send("finish -db test$x")
+    }
+
+    end = System.currentTimeMillis()
+    time = end - start
+
+    println("Removing from DB with -nu: ${TimeUnit.MILLISECONDS.toSeconds(time)}s")
 }

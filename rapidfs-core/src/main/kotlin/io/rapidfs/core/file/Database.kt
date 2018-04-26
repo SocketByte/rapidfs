@@ -59,6 +59,18 @@ open class Database(val file: File,
         return !this.dynamicMap.containsKey(key)
     }
 
+    fun removeNoUpdate(key: String): Boolean {
+        this.dynamicMap.remove(key)
+
+        debug("Database #$id", "Removed '$key'")
+
+        return !this.dynamicMap.containsKey(key)
+    }
+
+    fun finishRemoval() {
+        update(true)
+    }
+
     fun remove(value: Any?): Boolean {
         this.dynamicMap.forEach {
             (key, otherValue) ->

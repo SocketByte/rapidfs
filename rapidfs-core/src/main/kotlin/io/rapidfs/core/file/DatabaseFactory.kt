@@ -1,8 +1,7 @@
 package io.rapidfs.core.file
 
-import com.esotericsoftware.minlog.Log.debug
+import com.esotericsoftware.minlog.Log.*
 import java.io.File
-import com.esotericsoftware.minlog.Log.trace
 import com.google.common.base.Splitter
 import com.sun.org.apache.xml.internal.security.utils.Base64
 import io.rapidfs.core.security.StackTraceHandler
@@ -40,7 +39,7 @@ open class DatabaseFactory {
                     val name = split[1]
                     val id = split[0].replace("db", "").toInt()
 
-                    debug("Reading ${file.name}, database: $name ($id)")
+                    info("Reading ${file.name}, database: $name ($id)")
 
                     val database = Database(file, name, id)
 
