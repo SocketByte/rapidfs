@@ -18,6 +18,7 @@ object ClientAdapter : Listener() {
     override fun received(connection: Connection?, packet: Any?) {
         if (packet !is RapidPacketCallback)
             return
+        println("Received callback: $packet")
         callbackCatcher.complete(packet)
     }
 }

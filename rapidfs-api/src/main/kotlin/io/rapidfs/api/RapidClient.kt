@@ -11,11 +11,20 @@ class RapidClient(private val address: String,
 
     lateinit var client: Client
 
-    fun connect(timeout: Int = 4000): RapidClient {
-        this.client = Client(8192 * 2, 8192 * 2)
+    fun connect(timeout: Int = 4000,
+                writeBuffer: Int = 8192,
+                readBuffer: Int = 8192): RapidClient {
+        this.client = Client(writeBuffer, readBuffer)
         this.client.start()
         this.client.connect(timeout, address, port)
 
+        register()
+
+        this.client.addListener(ClientAdapter)
+        return this
+    }
+
+    private fun register() {
         val kryo = client.kryo
         kryo.register(ArrayList::class.java)
         kryo.register(RapidPacket::class.java)
@@ -28,9 +37,6 @@ class RapidClient(private val address: String,
         kryo.register(RapidPacketCreate::class.java)
         kryo.register(RapidPacketRemove::class.java)
         kryo.register(RapidPacketCallback::class.java)
-
-        this.client.addListener(ClientAdapter)
-        return this
     }
 
     fun disconnect() {
@@ -39,6 +45,10 @@ class RapidClient(private val address: String,
 
     fun reconnect() {
         this.client.reconnect()
+    }
+
+    fun update(databaseName: String, removeAction: Boolean = false) {
+        send("update -db $databaseName ${if (removeAction) "-rem" else ""}")
     }
 
     fun send(command: String) {
@@ -67,18 +77,18 @@ class RapidClient(private val address: String,
         return packet.data[0]
     }
 
-    fun setWithCallback(database: String, key: String, value: Any, callback: Callback) {
-        val set = RapidPacketSet(database, key, value)
+    fun setWithCallback(database: String, key: String, value: Any, callback: Callback, noUpdate: Boolean = false) {
+        val set = RapidPacketSet(database, key, value, noUpdate)
         CallbackHandler.make(this, set, callback)
     }
 
-    fun set(database: String, key: String, value: Any) {
-        val set = RapidPacketSet(database, key, value)
+    fun set(database: String, key: String, value: Any, noUpdate: Boolean = false) {
+        val set = RapidPacketSet(database, key, value, noUpdate)
         client.sendTCP(set)
     }
 
-    fun setOrThrow(database: String, key: String, value: Any) {
-        val set = RapidPacketSet(database, key, value)
+    fun setOrThrow(database: String, key: String, value: Any, noUpdate: Boolean = false) {
+        val set = RapidPacketSet(database, key, value, noUpdate)
         val handler = CallbackHandler.make(this, set)
 
         val packet = handler.get()
@@ -130,18 +140,18 @@ class RapidClient(private val address: String,
             throw RapidException(packet.message)
     }
 
-    fun removeWithCallback(database: String, key: String, callback: Callback) {
-        val remove = RapidPacketRemove(database, key)
+    fun removeWithCallback(database: String, key: String, callback: Callback, noUpdate: Boolean = false) {
+        val remove = RapidPacketRemove(database, key, noUpdate)
         CallbackHandler.make(this, remove, callback)
     }
 
-    fun remove(database: String, key: String) {
-        val remove = RapidPacketRemove(database, key)
+    fun remove(database: String, key: String, noUpdate: Boolean = false) {
+        val remove = RapidPacketRemove(database, key, noUpdate)
         client.sendTCP(remove)
     }
 
-    fun removeOrThrow(database: String, key: String) {
-        val remove = RapidPacketRemove(database, key)
+    fun removeOrThrow(database: String, key: String, noUpdate: Boolean = false) {
+        val remove = RapidPacketRemove(database, key, noUpdate)
         val handler = CallbackHandler.make(this, remove)
 
         val packet = handler.get()

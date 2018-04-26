@@ -85,7 +85,15 @@ open class DatabaseFactory {
     }
 
     fun removeDatabase(name: String): Boolean {
-        getDatabase(name) ?: return false
+        val database = getDatabase(name) ?: return false
+        val dirPath = File(".").canonicalPath + "/databases/"
+
+        val path = "$dirPath/db${database.id}_$name.rapid"
+        val file = File(path)
+
+        println("path: $path, exist: ${file.exists()}")
+
+        file.delete()
         databaseInfo.remove(name)
         return true
     }

@@ -9,10 +9,10 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 
-open class Database(val file: File,
-               val name: String,
-               val id: Int = 0,
-               private val buffer: Int = 8192) {
+open class Database(private val file: File,
+                    val name: String,
+                    val id: Int = 0,
+                    private val buffer: Int = 8192) {
 
     val dynamicMap = mutableMapOf<String, Any?>()
     val writtenKeys = mutableListOf<String>()

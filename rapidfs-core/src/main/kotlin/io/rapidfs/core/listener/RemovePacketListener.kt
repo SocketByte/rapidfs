@@ -18,6 +18,7 @@ object RemovePacketListener : Listener() {
 
         val key = packet.key
         val db = packet.database
+        val noUpdate = packet.noUpdate
 
         val database = RapidFS.databaseFactory.getDatabase(db)
 
@@ -36,7 +37,9 @@ object RemovePacketListener : Listener() {
             return
         }
 
-        database.remove(key)
+        if (noUpdate)
+            database.removeNoUpdate(key)
+        else database.remove(key)
 
         val callback = RapidPacketCallback(RapidResult.SUCCESS)
         callback.callbackId = packet.callbackId

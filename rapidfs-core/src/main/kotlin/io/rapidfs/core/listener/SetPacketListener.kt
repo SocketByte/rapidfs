@@ -19,6 +19,7 @@ object SetPacketListener : Listener() {
         val key = packet.key
         val value = packet.value
         val db = packet.database
+        val noUpdate = packet.noUpdate
 
         val database = RapidFS.databaseFactory.getDatabase(db)
 
@@ -29,7 +30,9 @@ object SetPacketListener : Listener() {
             return
         }
 
-        database.set(key, value)
+        if (noUpdate)
+            database.setNoUpdate(key, value)
+        else database.set(key, value)
 
         val callback = RapidPacketCallback(RapidResult.SUCCESS)
         callback.callbackId = packet.callbackId
