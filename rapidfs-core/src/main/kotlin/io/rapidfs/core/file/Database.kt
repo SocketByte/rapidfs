@@ -59,6 +59,12 @@ open class Database(val file: File,
         return !this.dynamicMap.containsKey(key)
     }
 
+    fun setNoUpdate(key: String, value: Any?) {
+        this.dynamicMap[key] = value
+
+        debug("Database #$id", "Set '$key' = '$value'")
+    }
+
     fun removeNoUpdate(key: String): Boolean {
         this.dynamicMap.remove(key)
 
@@ -69,6 +75,10 @@ open class Database(val file: File,
 
     fun finishRemoval() {
         update(true)
+    }
+
+    fun finish() {
+        update()
     }
 
     fun remove(value: Any?): Boolean {

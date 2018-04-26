@@ -12,7 +12,7 @@ class RapidClient(private val address: String,
     lateinit var client: Client
 
     fun connect(timeout: Int = 4000): RapidClient {
-        this.client = Client()
+        this.client = Client(8192 * 2, 8192 * 2)
         this.client.start()
         this.client.connect(timeout, address, port)
 

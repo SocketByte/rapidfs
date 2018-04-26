@@ -8,15 +8,22 @@ import io.rapidfs.core.command.ExecutableCommand
 object UpdateCommand : ExecutableCommand() {
     override fun execute(command: Command) {
         val dbArgument = command.getArgument("-db")
+        val remArgument = command.getArgument("-rem")
         val db = dbArgument?.content
         val database = RapidFS.databaseFactory.getDatabase(db!!)
 
-        database?.finishRemoval()
+        if (remArgument != null) {
+            database?.finishRemoval()
+            return
+        }
+
+        database?.finish()
     }
 
     override fun getBuilder(): CommandBuilder {
-        return CommandBuilder("finish")
+        return CommandBuilder("update")
                 .addArgument("-db")
+                .addArgument("-rem", false)
                 .setExecutable(this)
     }
 }

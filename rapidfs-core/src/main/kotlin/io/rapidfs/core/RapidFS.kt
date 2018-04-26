@@ -67,9 +67,9 @@ object RapidFS {
         debug("Created a maven model (from pom.xml)")
 
         WRITE_BUFFER = properties
-                .getProperty("write_buffer", "8192").toInt()
+                .getProperty("write_buffer", "16384").toInt()
         WRITE_BUFFER = properties
-                .getProperty("read_buffer", "8192").toInt()
+                .getProperty("read_buffer", "16384").toInt()
 
         server = Server(WRITE_BUFFER, READ_BUFFER)
         info("Created a server instance")

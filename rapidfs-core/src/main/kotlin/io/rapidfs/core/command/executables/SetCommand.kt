@@ -11,12 +11,18 @@ object SetCommand : ExecutableCommand() {
         val dbArgument = command.getArgument("-db")
         val keyArgument = command.getArgument("-k")
         val valueArgument = command.getArgument("-v")
+        val noUpdateArgument = command.getArgument("-nu")
 
         val db = dbArgument?.content
         val key = keyArgument?.content
         val value = valueArgument?.content
 
         val database = RapidFS.databaseFactory.getDatabase(db!!)
+
+        if (noUpdateArgument != null) {
+            database?.setNoUpdate(key!!, value)
+            return
+        }
 
         database?.set(key!!, value)
     }
@@ -26,6 +32,7 @@ object SetCommand : ExecutableCommand() {
                 .addArgument("-db")
                 .addArgument("-k")
                 .addArgument("-v")
+                .addArgument("-nu", false)
                 .setExecutable(this)
     }
 }
