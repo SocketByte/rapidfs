@@ -41,6 +41,10 @@ database.setOrThrow("key2", "value", true)
 database.update() // It will update
 ```
 It looks the same for removal.
+You can do something like that when using console:
+```
+remove -db database1 -k key -nu
+```
 
 Remember, this project won't be supported, it's only a test kotlin project to extend my language knowledge.
 I DON'T recommend using this database at all.
